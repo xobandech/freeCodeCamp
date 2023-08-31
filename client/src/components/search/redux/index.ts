@@ -1,52 +1,36 @@
 import { createAction, handleActions } from 'redux-actions';
+
 import { createTypes } from '../../../utils/create-types';
 
-type SearchState = {
-  search: {
-    query: string;
-    indexName: string;
-    isSearchDropdownEnabled: boolean;
-    isSearchBarFocused: boolean;
-  };
-};
+export const ns = 'search';
 
-const initialState: SearchState = {
-  search: {
-    query: '',
-    indexName: 'news',
-    isSearchDropdownEnabled: true,
-    isSearchBarFocused: false
-  }
+const initialState = {
+  query: '',
+  indexName: 'news',
+  isSearchDropdownEnabled: true,
+  isSearchBarFocused: false
 };
 
 const types = createTypes(
   ['toggleSearchDropdown', 'toggleSearchFocused', 'updateSearchQuery'],
-  'search'
+  ns
 );
 
-export const toggleSearchDropdown = createAction<boolean>(
-  types.toggleSearchDropdown
-);
-export const toggleSearchFocused = createAction<boolean>(
-  types.toggleSearchFocused
-);
-export const updateSearchQuery = createAction<string>(types.updateSearchQuery);
+export const toggleSearchDropdown = createAction(types.toggleSearchDropdown);
+export const toggleSearchFocused = createAction(types.toggleSearchFocused);
+export const updateSearchQuery = createAction(types.updateSearchQuery);
 
-export const isSearchDropdownEnabledSelector = (state: SearchState) => {
-  return state.search.isSearchDropdownEnabled;
-};
-export const isSearchBarFocusedSelector = (state: SearchState) =>
-  state.search.isSearchBarFocused;
-export const searchQuerySelector = (state: SearchState) => state.search.query;
+export const isSearchDropdownEnabledSelector = state =>
+  state[ns].isSearchDropdownEnabled;
+export const isSearchBarFocusedSelector = state => state[ns].isSearchBarFocused;
+export const searchQuerySelector = state => state[ns].query;
 
-export const reducer = handleActions<SearchState>(
+export const reducer = handleActions(
   {
     [types.toggleSearchDropdown]: (state, { payload }) => ({
       ...state,
       isSearchDropdownEnabled:
-        typeof payload === 'boolean'
-          ? payload
-          : !state.search.isSearchDropdownEnabled
+        typeof payload === 'boolean' ? payload : !state.isSearchDropdownEnabled
     }),
     [types.toggleSearchFocused]: (state, { payload }) => ({
       ...state,
